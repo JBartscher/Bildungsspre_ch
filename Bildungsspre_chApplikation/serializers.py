@@ -43,7 +43,7 @@ class DescriptionSerializer(serializers.ModelSerializer):
 
 
 class WordSerializer(serializers.ModelSerializer):
-    word_descriptions = DescriptionSerializer(many=True)
+    word_descriptions = DescriptionSerializer(many=True, required=False)
 
     related = serializers.SlugRelatedField(
         many=True,
@@ -55,4 +55,4 @@ class WordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Word
-        fields = ['word', 'related', 'word_descriptions']
+        fields = ['url', 'word', 'related', 'word_descriptions', 'word_type', 'source']
