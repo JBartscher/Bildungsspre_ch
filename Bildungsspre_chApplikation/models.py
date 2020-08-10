@@ -4,16 +4,21 @@ from django.db import models
 class Word(models.Model):
     word = models.CharField(max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
-    related = models.ManyToManyField("self", related_name="related_words", blank=True)  # related words
+    related = models.ManyToManyField("self", symmetrical=True, related_name="related_words", blank=True)  # related words
+
+    def __str__(self):
+        return f"{self.word}"
 
     class Meta:
         ordering = ['word']
+        verbose_name = 'word'
+        verbose_name_plural = 'words'
 
 
 class Field(models.Model):
     field = models.CharField(max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
-    related = models.ManyToManyField("self", related_name="related_fields", blank=True)  # related fields
+    related = models.ManyToManyField("self", symmetrical=True, related_name="related_fields", blank=True)  # related fields
 
     def __str__(self):
         return f"{self.field}"
@@ -23,8 +28,8 @@ class Field(models.Model):
 
 
 class Description(models.Model):
-    field = models.ForeignKey(Field, related_name="fields", default="Wissenschaftlich", on_delete=models.SET_DEFAULT)
-    word = models.ForeignKey(Word, related_name="words", on_delete=models.CASCADE)
+    word = models.ForeignKey(Word, related_name="word_descriptions", on_delete=models.CASCADE)
+    field = models.ForeignKey(Field, related_name="related_field", default="Bildungssprachlich", on_delete=models.SET_DEFAULT)
     description = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
 

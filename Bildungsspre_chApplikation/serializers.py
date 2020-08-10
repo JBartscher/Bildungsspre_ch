@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FieldSerializer(serializers.HyperlinkedModelSerializer):
-    #related = serializers.StringRelatedField(many=True)
+    # related = serializers.StringRelatedField(many=True)
     related = serializers.SlugRelatedField(
         many=True,
         read_only=False,
@@ -26,39 +26,33 @@ class FieldSerializer(serializers.HyperlinkedModelSerializer):
         queryset=Field.objects.all(),
         slug_field='field'
     )
+
     class Meta:
         model = Field
         fields = ['id', 'url', 'field', 'related']
 
+
 class DescriptionSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    field = FieldSerializer(many=True)
+    # description = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    # field = FieldSerializer(many=False, read_only=True)
+    # word = WordSerializer(many=False, read_only=True)
 
     class Meta:
         model = Description
+        fields = '__all__'
+
 
 class WordSerializer(serializers.ModelSerializer):
+    word_descriptions = DescriptionSerializer(many=True)
 
-    related = serializers.HyperlinkedRelatedField(
+    related = serializers.SlugRelatedField(
         many=True,
-        view_name="related words",
-        queryset=Word.objects.all()
-    )
-
-    description = serializers.HyperlinkedRelatedField(
-        many=True,
-        # read_only=True,
-        queryset=Description.objects.all(),
-        view_name='description'
+        read_only=False,
+        required=False,
+        queryset=Word.objects.all(),
+        slug_field='word'
     )
 
     class Meta:
         model = Word
-        fields = ['word', 'related', 'description']
-
-"""
-
-
-
-
-"""
+        fields = ['word', 'related', 'word_descriptions']
