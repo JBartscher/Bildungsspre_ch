@@ -35,14 +35,18 @@ class FieldSerializer(serializers.HyperlinkedModelSerializer):
 class DescriptionSerializer(serializers.ModelSerializer):
     # description = serializers.CharField(required=False, allow_blank=True, max_length=255)
     # field = FieldSerializer(many=False, read_only=True)
-    # word = WordSerializer(many=False, read_only=True)
+    # word = serializers.HyperlinkedRelatedField(many=False, read_only=True, view_name='word_descriptions')
 
     class Meta:
         model = Description
-        fields = '__all__'
+        fields = ['id', 'url', 'description', 'creation_date', '_order', 'word', 'field'] # '__all__'
 
 
 class WordSerializer(serializers.ModelSerializer):
+    """ the WordSerialzer uses the DescriptionSerializer which will get us all related objects with the
+    many=True Parameter. The Descriptions are by they're model related to a word and a field. It feels
+    odd but you dont need to "fetch" the related fields, the framework is doing it recursively like here.
+    """
     word_descriptions = DescriptionSerializer(many=True, required=False)
 
     related = serializers.SlugRelatedField(
