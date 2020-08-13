@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Word(models.Model):
-    word = models.CharField(max_length=255)
+    word = models.CharField(max_length=255, unique=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     related = models.ManyToManyField("self", symmetrical=True, related_name="related_words",
                                      blank=True)  # related words

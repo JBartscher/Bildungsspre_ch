@@ -22,13 +22,15 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 config = RawConfigParser()
-config.read('./secret_key.ini')
+config.read(r'./secret_key.ini')
 
 # sets secret Key from secret_key.ini file in root directory
 SECRET_KEY = config.get('section', 'SECRET_KEY')
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -122,11 +124,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# STATIC_ROOT = '/home/montysmaultier/Bildungsspre_ch/static'
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,

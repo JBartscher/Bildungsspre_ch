@@ -32,7 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    path(r'random/', include('Bildungsspre_chApplikation.urls')),
+    path(r'', include('Bildungsspre_chApplikation.urls')),
 
     path('', include(router.urls)),
 

@@ -39,7 +39,15 @@ class DescriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Description
-        fields = ['id', 'url', 'description', 'creation_date', '_order', 'word', 'field'] # '__all__'
+        fields = ['id', 'url', 'description', 'creation_date', '_order', 'word', 'field']  # '__all__'
+
+
+class PartialWordSerializer(serializers.ModelSerializer):
+    word_descriptions = DescriptionSerializer(many=True, read_only=True, required=False)
+
+    class Meta:
+        model = Word
+        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source']
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -59,4 +67,4 @@ class WordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Word
-        fields = ['url', 'word', 'related', 'word_descriptions', 'word_type', 'source']
+        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source']
