@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 
-{% block title %}Random Word{% endblock %}
+{% block title %}{{ word.word }}{% endblock %}
 
 {% block content %}
-    <h2><strong>{{ word.word }}</strong></h2>
+
     {% for description in word.word_descriptions %}
         <p>{{ description.description }}</p>
         <p>{{ description.field }}</p>

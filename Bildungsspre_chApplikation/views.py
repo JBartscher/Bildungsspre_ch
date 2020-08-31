@@ -171,7 +171,7 @@ class CreateWordCompleteView(APIView):
 
         return data
 
-    @permission_classes(permissions.AllowAny, )
+    @permission_classes(permissions.IsAuthenticated, )
     def post(self, request, format=None):
         data = request.data
 
