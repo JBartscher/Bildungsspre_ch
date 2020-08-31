@@ -1,0 +1,12 @@
+h1 {
+    text-align: center;
+
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}
+
+.container-fluid {
+    margin: 1rem;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}

@@ -1,6 +1,9 @@
 {% extends 'bootstrap.html' %}
 
 {% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 
 {% block bootstrap4_content %}
     <div class="container">
@@ -10,5 +13,4 @@
 
         {% block content %}(no content){% endblock %}
     </div>
-
 {% endblock %}

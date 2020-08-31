@@ -21,11 +21,11 @@ from Bildungsspre_chApplikation import views
 
 router = routers.DefaultRouter()
 
-router.register(r'api/users', views.UserViewSet)
-router.register(r'api/groups', views.GroupViewSet)
-router.register(r'api/words', views.WordViewSet)
-router.register(r'api/fields', views.FieldViewSet)
-router.register(r'api/description', views.DescriptionViewSet)
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+router.register(r'words', views.WordViewSet)
+router.register(r'fields', views.FieldViewSet)
+router.register(r'description', views.DescriptionViewSet)
 #router.register(r'random', views.RandomWordView)
 
 urlpatterns = [

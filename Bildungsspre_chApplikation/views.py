@@ -101,7 +101,7 @@ class RandomWordView(TemplateView):
 
         print(serializer.data)
 
-        messages.debug(request, serializer.data)
+        messages.info(request, serializer.data)
 
         return self.render_to_response(context)
 

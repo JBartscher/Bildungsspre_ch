@@ -1,12 +1,47 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
 
-{% block title %}{{ word.word }}{% endblock %}
+{# Load the tag library #}
+{% load bootstrap4 %}
+{% load static %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=True %}
+
+{% block bootstrap4_extra_head %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'Bildungsspre_chApplikation/css/custom.css' %}"/>
+
+    <script>
+        $( document ).ready(function() {
+
+            var fields_dict = {};
+
+            var all_fields = $(".field").map(function() {
+
+                var pk = this.getAttribute('value');
+                var domElem = this;
+
+                $.get( "/api/fields/" + pk + "/", function(data, domElem) {
+                    // console.log(data);
+                    return data
+                }).done(function (data){ domElem.innerHTML = data.field })
+
+
+            }).get();
+        });
+    </script>
+{% endblock %}
+
+
+{% block title %}<h1>{{ word.word }}</h1>   <span class="badge badge-dark">{{ word.word_type }}</span>{% endblock %}
 
 {% block content %}
 
     {% for description in word.word_descriptions %}
-        <p>{{ description.description }}</p>
-        <p>{{ description.field }}</p>
+        <div class="container-fluid">
+        <h3><em>{{ description.description }}</em></h3>
+        <span class="badge badge-pill badge-info field" value="{{ description.field }}"></span>
+        </div>
     {% endfor %}
 {% endblock %}
