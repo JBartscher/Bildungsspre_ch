@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # REST
     'Bildungsspre_chApplikation.apps.BildungsspreChapplikationConfig',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'Bildungsspre_ch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'bildungsspre_ch-frontend/templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {

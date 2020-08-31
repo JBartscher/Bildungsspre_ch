@@ -1,5 +1,6 @@
 from random import random
 
+from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Max
 from django.shortcuts import render
@@ -8,6 +9,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from django.utils import timezone
 from django.core.serializers import serialize as django_serialize
+from django.views.generic import TemplateView
 from rest_framework import viewsets, status
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
@@ -23,6 +25,17 @@ from .models import Word, Field, Description
 from .serializers import WordSerializer, FieldSerializer, DescriptionSerializer
 from random import randint
 
+
+def get_random():
+    max_id = Word.objects.all().aggregate(max_id=Max("id"))['max_id']
+
+    while True:
+        pk = randint(1, max_id)
+
+        word = Word.objects.filter(pk=pk).first()
+
+        if word:
+            return word
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -71,7 +84,28 @@ class FieldViewSet(viewsets.ModelViewSet):
 
 # TODO: filter view for fields
 
-class RandomWordView(APIView):
+class RandomWordView(TemplateView):
+
+    template_name = "random.html"
+
+    def get(self, request, *args, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        print(type(context))
+
+        word = get_random()
+
+        serializer = WordSerializer(word, context={'request': request})
+
+        context["word"] = serializer.data
+
+        print(serializer.data)
+
+        messages.debug(request, serializer.data)
+
+        return self.render_to_response(context)
+
+class RandomWordAPIView(APIView):
     queryset = User.objects.none()
 
     def get(self, request):
@@ -87,16 +121,7 @@ class RandomWordView(APIView):
         return Response(serializer.data)
 
     # @permission_classes((permissions.AllowAny,))
-    def get_random(self):
-        max_id = Word.objects.all().aggregate(max_id=Max("id"))['max_id']
 
-        while True:
-            pk = randint(1, max_id)
-
-            word = Word.objects.filter(pk=pk).first()
-
-            if word:
-                return word
 
     def get_random_with_filter(self, field):
 
@@ -112,7 +137,7 @@ class RandomWordView(APIView):
         except Field.DoesNotExist:
             field_obj = None
             print("NO MATCHUING FIELD FOUND")
-            return self.get_random()
+            return get_random()
 
 
 class CreateWordCompleteView(APIView):
