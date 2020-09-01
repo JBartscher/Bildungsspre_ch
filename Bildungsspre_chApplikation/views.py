@@ -37,6 +37,26 @@ def get_random():
         if word:
             return word
 
+def get_random_with_filter(field):
+
+    try:
+
+        if field.isdecimal() == True:
+            field_obj = Field.objects.get(pk=int(field))
+        else:
+            field_obj = Field.objects.get(field__icontains=field)
+        print(f"MATCHUING FIELD FOUND: {field_obj.field} id: {field_obj.pk}")
+
+        words = Word.objects.filter(word_descriptions__field_id__exact=field_obj.pk)
+        random_pick = randint(0, words.count() - 1)
+
+        return words[random_pick]
+
+    except Field.DoesNotExist:
+        field_obj = None
+        print("NO MATCHUING FIELD FOUND")
+        return get_random()
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -61,7 +81,8 @@ class WordViewSet(viewsets.ModelViewSet):
     """
     queryset = Word.objects.all()
     serializer_class = WordSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class DescriptionViewSet(viewsets.ModelViewSet):
@@ -70,16 +91,20 @@ class DescriptionViewSet(viewsets.ModelViewSet):
     """
     queryset = Description.objects.all()
     serializer_class = DescriptionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class FieldViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     """
     API endpoint that allows words to be viewed or edited.
     """
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
 
 
 # TODO: filter view for fields
@@ -91,18 +116,19 @@ class RandomWordView(TemplateView):
     def get(self, request, *args, **kwargs):
 
         context = super().get_context_data(**kwargs)
-        print(type(context))
 
-        word = get_random()
+        if request.GET.get('field'):
+            field = request.GET.get('field')
+            word = get_random_with_filter(field)
+            print(f'field is: {field}')
+        else:
+            word = get_random()
 
         serializer = WordSerializer(word, context={'request': request})
-
+        # append the serialized word to the request context so it can be displayed in template the view
         context["word"] = serializer.data
 
-        print(serializer.data)
-
-        messages.info(request, serializer.data)
-
+        messages.debug(request, serializer.data)
         return self.render_to_response(context)
 
 class RandomWordAPIView(APIView):
@@ -112,33 +138,15 @@ class RandomWordAPIView(APIView):
 
         if request.GET.get('field'):
             field = request.GET.get('field')
-            self.get_random_with_filter(field)
+            word = get_random_with_filter(field)
             print(f'field is: {field}')
-
-        word = self.get_random()
+        else:
+            word = get_random()
 
         serializer = WordSerializer(word, context={'request': request})
         return Response(serializer.data)
 
     # @permission_classes((permissions.AllowAny,))
-
-
-    def get_random_with_filter(self, field):
-
-        try:
-            field_obj = Field.objects.get(field__icontains=field)
-            print(f"MATCHUING FIELD FOUND: {field_obj.field} id: {field_obj.pk}")
-
-            words = Word.objects.filter(word_descriptions__field_id__exact=field_obj.pk)
-            random_pick = randint(0, words.count() - 1)
-
-            return words[random_pick]
-
-        except Field.DoesNotExist:
-            field_obj = None
-            print("NO MATCHUING FIELD FOUND")
-            return get_random()
-
 
 class CreateWordCompleteView(APIView):
     # TODO: only authenticated users

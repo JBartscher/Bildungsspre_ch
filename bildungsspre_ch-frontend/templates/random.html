@@ -34,14 +34,16 @@
 {% endblock %}
 
 
-{% block title %}<h1>{{ word.word }}</h1>   <span class="badge badge-dark">{{ word.word_type }}</span>{% endblock %}
+{% block title %}{{ word.word }}{% endblock %}
 
 {% block content %}
+
+    <span class="badge badge-dark">{{ word.word_type }}</span>
 
     {% for description in word.word_descriptions %}
         <div class="container-fluid">
         <h3><em>{{ description.description }}</em></h3>
-        <span class="badge badge-pill badge-info field" value="{{ description.field }}"></span>
+        <a href="?field={{ description.field }}"><span class="btn badge badge-pill badge-info field" value="{{ description.field }}"></span></a>
         </div>
     {% endfor %}
 {% endblock %}
