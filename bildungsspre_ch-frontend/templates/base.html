@@ -1,9 +1,12 @@
 {% extends 'bootstrap.html' %}
 
 {% load bootstrap4 %}
+{% load static %}
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
+
+<link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
 
 {% block bootstrap4_content %}
     <div class="container">
