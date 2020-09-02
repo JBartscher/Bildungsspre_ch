@@ -10,3 +10,8 @@ h1 {
     margin: 1rem;
     font-family: 'Lucida Console', 'Courier New', monospace;
 }
+
+#id_word_type {
+    flex-flow: wrap;
+    width: 100%;
+}

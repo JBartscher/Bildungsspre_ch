@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{# Load the tag library #}
+{% load bootstrap4 %}
+{% load static %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=True %}
+
+{% block bootstrap4_extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Bildungsspre_chApplikation/css/custom.css' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
+{% endblock %}
+
+{% block title %}Neues Wort{% endblock %}
+
+{% block content %}
+    {# Display a form to submit a new word#}
+    <form action="/url/to/submit/" method="post" role="form" class="form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ forms.word_form.as_p }}
+        <fieldset>
+          {{ forms.description_form.as_p }}
+        </fieldset>
+      {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

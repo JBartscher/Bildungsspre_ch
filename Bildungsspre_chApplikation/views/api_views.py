@@ -1,98 +1,13 @@
-from random import random
-
-from django.contrib import messages
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Max
-from django.shortcuts import render
-
-# Create your views here.
-from django.contrib.auth.models import User, Group
-from django.utils import timezone
-from django.core.serializers import serialize as django_serialize
-from django.views.generic import TemplateView
-from rest_framework import viewsets, status
-from rest_framework import permissions
+from django.contrib.auth.models import Group, User
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import permission_classes
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-
-from .serializers import UserSerializer, GroupSerializer, PartialWordSerializer
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
-from .models import Word, Field, Description
-from .serializers import WordSerializer, FieldSerializer, DescriptionSerializer
-from random import randint
 
-
-def get_random():
-    max_id = Word.objects.all().aggregate(max_id=Max("id"))['max_id']
-
-    while True:
-        pk = randint(1, max_id)
-
-        word = Word.objects.filter(pk=pk).first()
-
-        if word:
-            return word
-
-def get_random_with_filter(field):
-
-    try:
-
-        if field.isdecimal() == True:
-            field_obj = Field.objects.get(pk=int(field))
-        else:
-            field_obj = Field.objects.get(field__icontains=field)
-        print(f"MATCHUING FIELD FOUND: {field_obj.field} id: {field_obj.pk}")
-
-        words = Word.objects.filter(word_descriptions__field_id__exact=field_obj.pk)
-        random_pick = randint(0, words.count() - 1)
-
-        return words[random_pick]
-
-    except Field.DoesNotExist:
-        field_obj = None
-        print("NO MATCHUING FIELD FOUND")
-        return get_random()
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class WordViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows words to be viewed or edited.
-    """
-    queryset = Word.objects.all()
-    serializer_class = WordSerializer
-
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-
-class DescriptionViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows descriptions to be viewed or edited.
-    """
-    queryset = Description.objects.all()
-    serializer_class = DescriptionSerializer
-
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+from Bildungsspre_chApplikation.models import Field, Description, Word
+from Bildungsspre_chApplikation.serializers import FieldSerializer, DescriptionSerializer, WordSerializer, \
+    GroupSerializer, UserSerializer, PartialWordSerializer
+from Bildungsspre_chApplikation.views.view_utils import get_random_with_filter, get_random
 
 
 class FieldViewSet(viewsets.ModelViewSet):
@@ -106,30 +21,43 @@ class FieldViewSet(viewsets.ModelViewSet):
     serializer_class = FieldSerializer
 
 
+class DescriptionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows descriptions to be viewed or edited.
+    """
+    queryset = Description.objects.all()
+    serializer_class = DescriptionSerializer
 
-# TODO: filter view for fields
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class RandomWordView(TemplateView):
 
-    template_name = "random.html"
+class WordViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows words to be viewed or edited.
+    """
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
 
-    def get(self, request, *args, **kwargs):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-        context = super().get_context_data(**kwargs)
 
-        if request.GET.get('field'):
-            field = request.GET.get('field')
-            word = get_random_with_filter(field)
-            print(f'field is: {field}')
-        else:
-            word = get_random()
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-        serializer = WordSerializer(word, context={'request': request})
-        # append the serialized word to the request context so it can be displayed in template the view
-        context["word"] = serializer.data
 
-        messages.debug(request, serializer.data)
-        return self.render_to_response(context)
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class RandomWordAPIView(APIView):
     queryset = User.objects.none()
@@ -147,6 +75,7 @@ class RandomWordAPIView(APIView):
         return Response(serializer.data)
 
     # @permission_classes((permissions.AllowAny,))
+
 
 class CreateWordCompleteView(APIView):
     # TODO: only authenticated users
@@ -233,17 +162,3 @@ class CreateWordCompleteView(APIView):
         except Exception as ex:
             # new_word.delete()
             return Response(f"cannot create word {ex}", status=status.HTTP_400_BAD_REQUEST)
-
-        # return Response(status=status.HTTP_202_ACCEPTED)
-
-# if word.is_valid():
-#
-# return Response("OK", status=status.HTTP_200_OK)
-# return Response(word.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# serializer = SnippetSerializer(data=request.data)
-# if serializer.is_valid():
-#     serializer.save()
-#     return Response(serializer.data, status=status.HTTP_201_CREATED)
-# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
