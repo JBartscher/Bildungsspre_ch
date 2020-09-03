@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{# Load the tag library #}
+{% load bootstrap4 %}
+{% load static %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=True %}
+
+{% block bootstrap4_extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Bildungsspre_chApplikation/css/custom.css' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
+{% endblock %}
+
+{% block title %}Neues Wort{% endblock %}
+
+{% block content %}
+    {# Display a form to submit a new word#}
+    <form action="/url/to/submit/" method="post" role="form" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ forms.word_form.as_p }}
+        <fieldset>
+            <div class="fieldWrapper form-group bootstrap4-req">
+                {{ forms.description_form.errors }}
+                <label for="{{ form.description_form.id_for_label }}">Feld</label>
+                {{ forms.description_form.field }}
+                <small class="form-text text-muted">Feld aus dem die Bedeutung kommt</small>
+            </div>
+            <div class="fieldWrapper form-group bootstrap4-req">
+                {{ forms.description_form.errors }}
+                <label for="{{ form.description_form.id_for_label }}">Bedeutung in diesem Feld</label>
+                {{ forms.description_form.description }}
+                <small class="form-text text-muted">Bedeutung in diesem Feld</small>
+            </div>
+
+
+        </fieldset>
+        {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

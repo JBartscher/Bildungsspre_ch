@@ -4,15 +4,23 @@ from django.forms import BaseFormSet, formset_factory
 from django.forms.forms import BaseForm
 
 from .models import Word, Field, Description
+from .widgets import CustomTextInput, CustomTextarea
 
 from bootstrap4.widgets import RadioSelectButtonGroup
 
 class DescriptionForm(forms.ModelForm):
+
+    required_css_class = "bootstrap4-req"
+
     class Meta:
         model = Description
+
+        fields_choices = [(i, j[1]) for i, j in enumerate(Field.objects.all().values_list())]
+
         fields = ['description', 'field'] # '__all__'
         widgets = {
-            "description" : forms.Textarea(attrs={"class" : "description", 'cols': '10', 'rows': '4'}),
+            "description" : CustomTextarea(attrs={"class" : "form-control", 'cols': '10', 'rows': '4'}),
+            "field" : forms.Select(attrs={"class": "form-control"})
         }
         labels = {
             "description": "Erläuterung",
@@ -26,7 +34,7 @@ class WordForm(forms.Form):
         max_length=255,
         help_text="Neues Wort",
         required=True,
-        widget=forms.TextInput(attrs={"placeholder": "Platzhalter"}),
+        widget=CustomTextInput(attrs={"class": "TEST","placeholder": "Platzhalter"}),
         label="Wort",
     )
 
@@ -41,9 +49,9 @@ class WordForm(forms.Form):
     fields_choices = [(i, j[1]) for i, j in enumerate(Field.objects.all().values_list())]
 
     # ComboField ?
-    # select_field = forms.ChoiceField(choices=fields_choices, help_text="Feld aus dem das Wort kommt", label="Feld")
+    select_field = forms.ChoiceField(choices=fields_choices, help_text="Feld aus dem das Wort kommt", label="Feld")
     # select_field.group = 1
-    # description = forms.CharField(widget=forms.Textarea, strip=False ,label="Erläuterung")
+    description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), strip=False ,label="Erläuterung")
     # description.group = 1
 
     required_css_class = "bootstrap4-req"

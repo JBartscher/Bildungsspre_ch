@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-
-from pathlib import Path
 from configparser import RawConfigParser
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+print(f"Basedir: {BASE_DIR}")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -26,8 +26,6 @@ config.read(r'./secret_key.ini')
 
 # sets secret Key from secret_key.ini file in root directory
 SECRET_KEY = config.get('section', 'SECRET_KEY')
-
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -63,7 +61,10 @@ ROOT_URLCONF = 'Bildungsspre_ch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'bildungsspre_ch-frontend/templates')]
+        'DIRS': [
+            os.path.join(BASE_DIR, 'Bildungsspre_chApplikation/templates'),
+            os.path.join(BASE_DIR, 'Bildungsspre_chApplikation/templates/widgets')
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -76,6 +77,8 @@ TEMPLATES = [
         },
     },
 ]
+
+print(f"Basedir of Templates: {TEMPLATES[0]}")
 
 BOOTSTRAP4 = {
 
@@ -146,7 +149,7 @@ BOOTSTRAP4 = {
     'success_css_class': 'is-valid',
 
     # Renderers (only set these if you have studied the source and understand the inner workings)
-    'formset_renderers':{
+    'formset_renderers': {
         'default': 'bootstrap4.renderers.FormsetRenderer',
     },
     'form_renderers': {
