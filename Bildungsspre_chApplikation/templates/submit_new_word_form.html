@@ -13,8 +13,14 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
 
     <script>
-        function createNewDesctiptionFormElement(){
-         alert("new elemt");
+        function createNewDesctiptionFormElement() {
+            var new_description = $("#first_description").clone(false)
+            //reset value of textare
+            new_description.find('textarea').each(function () {
+                $(this).val(this.defaultValue);
+            });
+
+            new_description.prependTo(".descriptions");
         }
     </script>
 {% endblock %}
@@ -44,23 +50,27 @@
             Dynamisch erzeugte neue Bedeutungen werden VOR dieses Element per js angehängt, damit der hinzufügen Button
             nicht in jedem Element enthalten ist sondern nur im "letzten"
         -->
-        <fieldset id="first_description">
-            <div class="fieldWrapper form-group bootstrap4-req">
-                {{ forms.description_form.errors }}
-                <label for="{{ form.description_form.id_for_label }}">Feld</label>
-                {{ forms.description_form.field }}
-                <small class="form-text text-muted">Feld aus dem die Bedeutung kommt</small>
-            </div>
-            <div class="fieldWrapper form-group bootstrap4-req">
-                {{ forms.description_form.errors }}
-                <label for="{{ form.description_form.id_for_label }}">Bedeutung in diesem Feld</label>
-                {{ forms.description_form.description }}
-                <small class="form-text text-muted">Bedeutung in diesem Feld</small>
-            </div>
-        </fieldset>
+        <div class="descriptions">
+            <fieldset id="first_description">
+                <div class="fieldWrapper form-group bootstrap4-req">
+                    {{ forms.description_form.errors }}
+                    <label for="{{ form.description_form.id_for_label }}">Feld</label>
+                    {{ forms.description_form.field }}
+                    <small class="form-text text-muted">Feld aus dem die Bedeutung kommt</small>
+                </div>
+                <div class="fieldWrapper form-group bootstrap4-req">
+                    {{ forms.description_form.errors }}
+                    <label for="{{ form.description_form.id_for_label }}">Bedeutung in diesem Feld</label>
+                    {{ forms.description_form.description }}
+                    <small class="form-text text-muted">Bedeutung in diesem Feld</small>
+                </div>
+            </fieldset>
+        </div>
 
         <div class="form-group">
-            <button class="btn btn-primary" onclick="">Weitere Bedeutung hinzufügen</button>
+            <button class="btn btn-primary" type="button" onclick="createNewDesctiptionFormElement()">Weitere Bedeutung
+                hinzufügen
+            </button>
         </div>
 
         <hr>
