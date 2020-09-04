@@ -11,17 +11,17 @@ class Word(models.Model):
     ADVERB = 'ADV'
     INTERJEKTION = 'INT'
     KONJUNKTION = 'KON'
-    PRÄPOSITION = 'PRÄ'
+    PRAEPOSITION = 'PRÄ'
     PRONOMEN = 'PRO'
     SUBSTANTIV = 'SUB'
     VERB = 'VER'
 
     WORTART_CHOICES = [
-        (ADJECTIVE, 'Adjective'),
+        (ADJECTIVE, 'Adjektiv'),
         (ADVERB, 'Adverb'),
-        (INTERJEKTION, 'Interjection'),
+        (INTERJEKTION, 'Interjektion'),
         (KONJUNKTION, 'Konjunktion'),
-        (PRÄPOSITION, 'Präposition'),
+        (PRAEPOSITION, 'Präposition'),
         (PRONOMEN, 'Pronomen'),
         (SUBSTANTIV, 'Substantiv, Nomen'),
         (VERB, 'Verb'),

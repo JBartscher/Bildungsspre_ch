@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.views.generic import TemplateView, FormView
+from multi_form_view import MultiFormView
 
-from Bildungsspre_chApplikation.forms import WordForm, DescriptionForm, EmptyForm
+from Bildungsspre_chApplikation.forms import WordForm, DescriptionForm
 from Bildungsspre_chApplikation.serializers import WordSerializer
 from Bildungsspre_chApplikation.views.view_utils import get_random, get_random_with_filter
-
-from multi_form_view import MultiFormView
 
 
 class RandomWordView(TemplateView):
@@ -37,13 +36,11 @@ class NewWordFormView(FormView):
 
     form_class = WordForm
 
-class WordMultiFormView(MultiFormView):
 
-    form_class = EmptyForm
-    
+class WordMultiFormView(MultiFormView):
     form_classes = {
-        'word_form' : WordForm,
-        'description_form' : DescriptionForm,
+        'word_form': WordForm,
+        'description_form': DescriptionForm,
     }
 
     template_name = 'submit_new_word_form.html'

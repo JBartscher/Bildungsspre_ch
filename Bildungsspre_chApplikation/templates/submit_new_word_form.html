@@ -11,6 +11,12 @@
 {% block bootstrap4_extra_head %}
     <link rel="stylesheet" type="text/css" href="{% static 'Bildungsspre_chApplikation/css/custom.css' %}"/>
     <link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
+
+    <script>
+        function createNewDesctiptionFormElement(){
+         alert("new elemt");
+        }
+    </script>
 {% endblock %}
 
 {% block title %}Neues Wort{% endblock %}
@@ -19,8 +25,26 @@
     {# Display a form to submit a new word#}
     <form action="/url/to/submit/" method="post" role="form" class="form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ forms.word_form.as_p }}
-        <fieldset>
+        <div class="form-group bootstrap4-req">
+            <label for="id_word">Wort</label>
+            {{ forms.word_form.word }}
+            <small class="form-text text-muted">Neues Wort</small>
+        </div>
+
+        <div class="form-group bootstrap4-req">
+            <label for="id_word_type_0">Wortart</label>
+            {{ forms.word_form.word_type }}
+            <small class="form-text text-muted">Wortart</small>
+
+        </div>
+
+        <hr>
+
+        <!-- BESCHREIBUNG & WORTART
+            Dynamisch erzeugte neue Bedeutungen werden VOR dieses Element per js angehängt, damit der hinzufügen Button
+            nicht in jedem Element enthalten ist sondern nur im "letzten"
+        -->
+        <fieldset id="first_description">
             <div class="fieldWrapper form-group bootstrap4-req">
                 {{ forms.description_form.errors }}
                 <label for="{{ form.description_form.id_for_label }}">Feld</label>
@@ -33,9 +57,17 @@
                 {{ forms.description_form.description }}
                 <small class="form-text text-muted">Bedeutung in diesem Feld</small>
             </div>
-
-
         </fieldset>
-        {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="">Weitere Bedeutung hinzufügen</button>
+        </div>
+
+        <hr>
+        <!-- SUBMIT or ABORT -->
+        <div class="form-group">
+            <button class="btn btn-success" type="submit">OK</button>
+            <button class="btn btn-danger" type="reset">Cancel</button>
+        </div>
     </form>
 {% endblock %}

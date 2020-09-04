@@ -8,3 +8,5 @@
 /.idea/.gitignore
 /secret_key.ini
 /.env
+/.idea/dataSources.local.xml
+/.idea/workspace.xml
