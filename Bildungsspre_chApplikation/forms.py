@@ -15,7 +15,11 @@ class DescriptionForm(forms.ModelForm):
 
         fields = ['description', 'field']  # '__all__'
         widgets = {
-            "description": CustomTextarea(attrs={"class": "form-control", 'cols': '10', 'rows': '4'}),
+            "description": CustomTextarea(
+                attrs={"class": "form-control",
+                       'cols': '10',
+                       'rows': '4'}
+            ),
             "field": forms.Select(attrs={"class": "form-control"})
         }
         labels = {
@@ -44,12 +48,6 @@ class WordForm(forms.Form):
 
     # get only the names of the fields enumerated for selection
     fields_choices = [(i, j[1]) for i, j in enumerate(Field.objects.all().values_list())]
-
-    # ComboField ?
-    # select_field = forms.ChoiceField(choices=fields_choices, help_text="Feld aus dem das Wort kommt", label="Feld")
-    # select_field.group = 1
-    # description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), strip=False ,label="Erläuterung")
-    # description.group = 1
 
     required_css_class = "bootstrap4-req"
 

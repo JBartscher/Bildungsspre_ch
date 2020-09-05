@@ -8,5 +8,5 @@ urlpatterns = [
     path('new2/', views.WordMultiFormView.as_view(), name="new_word_multipart_from"),
 
     path('random/', api_views.RandomWordAPIView.as_view()),
-    path('word/', api_views.CreateWordCompleteView.as_view())
+    path('api/word/', api_views.CreateWordCompleteView.as_view())
 ]
