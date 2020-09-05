@@ -55,13 +55,13 @@
     {% if user.is_authenticated %}
         <div class="fixed-bottom">
             <a href="./new/">
-                <img class="img-responsive"
+                <img class="img-responsive img-icon"
                      src="{% static 'Bildungsspre_chApplikation/icons/circle_plus.png' %}" alt="Neues Wort hinzufügen">
             </a>
         </div>
     {% else %}
-        <div class="fixed-bottom">
-            <a href="./api-auth/login/?next=//">
+        <div class="fixed-bottom img-icon">
+            <a href="./api-auth/login/?next=/">
                 <img class="img-responsive"
                      src="{% static 'Bildungsspre_chApplikation/icons/login.png' %}" alt="Login">
             </a>

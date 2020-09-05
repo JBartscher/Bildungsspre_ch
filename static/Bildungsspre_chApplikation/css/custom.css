@@ -11,6 +11,11 @@ h1 {
     font-family: 'Lucida Console', 'Courier New', monospace;
 }
 
+.img-icon {
+    width: 25px;
+    margin: 10px;
+}
+
 #id_word_type {
     flex-flow: wrap;
     width: 100%;
