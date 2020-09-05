@@ -15,19 +15,21 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'moustache.ico' %}"/>
 
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function () {
 
             var fields_dict = {};
 
-            var all_fields = $(".field").map(function() {
+            var all_fields = $(".field").map(function () {
 
                 var pk = this.getAttribute('value');
                 var domElem = this;
 
-                $.get( "/api/fields/" + pk + "/", function(data, domElem) {
+                $.get("/api/fields/" + pk + "/", function (data, domElem) {
                     // console.log(data);
                     return data
-                }).done(function (data){ domElem.innerHTML = data.field })
+                }).done(function (data) {
+                    domElem.innerHTML = data.field
+                })
 
 
             }).get();
@@ -44,8 +46,26 @@
 
     {% for description in word.word_descriptions %}
         <div class="container-fluid">
-        <h3><em>{{ description.description }}</em></h3>
-        <a href="?field={{ description.field }}"><span class="btn badge badge-pill badge-info field" value="{{ description.field }}"></span></a>
+            <h3><em>{{ description.description }}</em></h3>
+            <a href="?field={{ description.field }}"><span class="btn badge badge-pill badge-info field"
+                                                           value="{{ description.field }}"></span></a>
         </div>
     {% endfor %}
+
+    {% if user.is_authenticated %}
+        <div class="fixed-bottom">
+            <a href="./new/">
+                <img class="img-responsive"
+                     src="{% static 'Bildungsspre_chApplikation/icons/circle_plus.png' %}" alt="Neues Wort hinzufügen">
+            </a>
+        </div>
+    {% else %}
+        <div class="fixed-bottom">
+            <a href="./api-auth/login/?next=//">
+                <img class="img-responsive"
+                     src="{% static 'Bildungsspre_chApplikation/icons/login.png' %}" alt="Login">
+            </a>
+        </div>
+    {% endif %}
+
 {% endblock %}

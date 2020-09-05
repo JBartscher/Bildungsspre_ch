@@ -11,7 +11,6 @@ from Bildungsspre_chApplikation.views.view_utils import get_random_with_filter, 
 
 
 class FieldViewSet(viewsets.ModelViewSet):
-
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     """
@@ -88,7 +87,6 @@ class CreateWordCompleteView(APIView):
     def _replace_field_names_with_field_pks(self, data):
         """
         replaces names of fields in POST data with a pk if the field is not alphanumeric.
-        TODO: check if already alphanumeric and is valid field
 
         :param data: the POST data
         :return: replaces name of field with pk of field.
@@ -107,10 +105,11 @@ class CreateWordCompleteView(APIView):
                     description.get("field", "Bildungssprachlich"))
 
         return data
-
+"""
     @permission_classes(permissions.IsAuthenticated, )
-    def post(self, request, format=None):
-        data = request.data
+    def post(self, request, data):
+
+        print(data)
 
         if 'word' not in data or 'word_descriptions' not in data:
             return Response("missing key: 'word' or 'word_description' not provided",
@@ -133,26 +132,6 @@ class CreateWordCompleteView(APIView):
                         description_serializer.save()
                     else:
                         return Response(description_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                """
-                pk = word_serializer.data.get('id')
-                 
-                try:
-                    word = Word.objects.get(pk=pk)
-                    _ = django_serialize('json', [word], cls=DjangoJSONEncoder)
-                    _ = _[1:-1]
-                    print(_)
-                except Exception as e:
-                    print(e)
-
-                word_serializer.validated_data
-                
-                serializer = PartialWordSerializer(word_serializer.data, data={'word_descriptions': data.get('word_descriptions')}, context={'request': request}, partial=True)
-                serializer.is_valid()
-                print(serializer.errors)
-                print(serializer.data)
-                
-                """
-
 
                 return Response(word_serializer.validated_data, status=status.HTTP_201_CREATED)
             else:
@@ -162,3 +141,4 @@ class CreateWordCompleteView(APIView):
         except Exception as ex:
             # new_word.delete()
             return Response(f"cannot create word {ex}", status=status.HTTP_400_BAD_REQUEST)
+"""

@@ -87,39 +87,8 @@
 
     <script>
         $('#new_word_form').submit(function () {
-
-            // alert('Handler for .submit() called.');
-            /*
-            var data = $('form').serializeArray();
-
-            var keys = [];
-            var values = [];
-
-            data.forEach(function (item) {
-                if (item['name'] === 'field') {
-                    keys.push(item['value']);
-                }
-                if (item['name'] === 'description') {
-                    values.push(item['value']);
-                }
-            });
-
-            console.log(keys);
-            console.log(values);
-
-            var word_descriptions = _.zip(keys, values);
-            //[keys,values].reduce(function(p, c) { p[c[0]] = c[1]; return p; }, {});
-            console.log(word_descriptions);
-
-
-            // var obj = Object.assign({}, ...[a, b].map(([k, v]) => ({[k]: v}))
-
-            console.log(data);
-            alert(data);
-
-            return false;
-
-             */
+            alert('Handler for .submit() called.');
+            //return false;
         });
     </script>
 {% endblock %}

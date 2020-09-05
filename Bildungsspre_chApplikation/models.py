@@ -36,7 +36,7 @@ class Word(models.Model):
     source = models.URLField(blank=True)
 
     def __str__(self):
-        return f"{self.word}"
+        return f"{self.word}, id: {self.id}, type: {self.word_type}, {self.word_descriptions}"
 
     class Meta:
         ordering = ['word']

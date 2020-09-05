@@ -1,11 +1,13 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView
 from multi_form_view import MultiFormView
 from rest_framework import status
 
 from Bildungsspre_chApplikation.forms import WordForm, DescriptionForm
+from Bildungsspre_chApplikation.models import Word
 from Bildungsspre_chApplikation.serializers import WordSerializer, PartialWordSerializer, DescriptionSerializer
 from Bildungsspre_chApplikation.views.view_utils import get_random, get_random_with_filter
 
@@ -32,12 +34,6 @@ class RandomWordView(TemplateView):
 
         messages.debug(request, serializer.data)
         return self.render_to_response(context)
-
-
-class NewWordFormView(FormView):
-    template_name = "submit_new_word_form_v2.html"
-
-    form_class = WordForm
 
 
 class WordMultiFormView(MultiFormView):
@@ -95,7 +91,9 @@ class WordMultiFormView(MultiFormView):
                 else:
                     return HttpResponse(description_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            return redirect('/')
+            messages.info(request, str(Word.objects.all().filter(pk=word_serializer.data.get('id'))))
+
+            return redirect('/new')
 
         except Exception as ex:
             # new_word.delete()
