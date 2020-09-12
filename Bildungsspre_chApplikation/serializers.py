@@ -1,7 +1,6 @@
-from abc import ABC
-
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+
 from .models import Description, Field, Word
 
 
@@ -37,9 +36,14 @@ class DescriptionSerializer(serializers.ModelSerializer):
     # field = FieldSerializer(many=False, read_only=True)
     # word = serializers.HyperlinkedRelatedField(many=False, read_only=True, view_name='word_descriptions')
 
+    user = serializers.StringRelatedField(many=False, required=False, read_only=True)
+
+    # field = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = Description
-        fields = ['id', 'url', 'description', 'creation_date', '_order', 'word', 'field']  # '__all__'
+        fields = ['id', 'url', 'description', 'creation_date', '_order', 'word', 'field', 'user']  # '__all__'
+        # read_only_fields = ['user']
 
 
 class PartialWordSerializer(serializers.ModelSerializer):
@@ -47,7 +51,7 @@ class PartialWordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Word
-        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source']
+        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source', 'user']
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -65,6 +69,8 @@ class WordSerializer(serializers.ModelSerializer):
         slug_field='word'
     )
 
+    user = serializers.StringRelatedField(many=False, read_only=True)
+
     class Meta:
         model = Word
-        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source']
+        fields = ['url', 'id', 'word', 'related', 'word_descriptions', 'word_type', 'source', 'user']

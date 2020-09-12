@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
@@ -56,19 +55,12 @@ class WordMultiFormView(MultiFormView):
         for field, description in zip(fields, descriptions):
             word_descriptions.append({'field': field, 'description': description, 'word': None})
 
-        print(word_descriptions)
-
         data = {'word': request.POST.get('word'),
                 'word_type': request.POST.get('word_type'),
                 'source': '',
                 'word_descriptions': word_descriptions,
+                'user': request.user.id,
                 }
-
-        print(data)
-
-        # if 'word' not in data or 'word_descriptions' not in data:
-        #    return Response("missing key: 'word' or 'word_description' not provided",
-        #                    status=status.HTTP_400_BAD_REQUEST)
 
         try:
 
@@ -83,6 +75,9 @@ class WordMultiFormView(MultiFormView):
 
                 word = word_serializer.data.get('id')
                 description["word"] = word
+                description["user"] = request.user.id
+
+                print(description)
 
                 description_serializer = DescriptionSerializer(data=description, context={'request': request})
 

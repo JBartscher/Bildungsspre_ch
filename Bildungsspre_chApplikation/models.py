@@ -1,12 +1,8 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
 class Word(models.Model):
-    word = models.CharField(max_length=255, unique=True)
-    creation_date = models.DateTimeField(auto_now_add=True)
-    related = models.ManyToManyField("self", symmetrical=True, related_name="related_words",
-                                     blank=True)  # related words
-
     ADJECTIVE = 'ADJ'
     ADVERB = 'ADV'
     INTERJEKTION = 'INT'
@@ -26,6 +22,12 @@ class Word(models.Model):
         (SUBSTANTIV, 'Substantiv, Nomen'),
         (VERB, 'Verb'),
     ]
+
+    word = models.CharField(max_length=255, unique=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    related = models.ManyToManyField("self", symmetrical=True, related_name="related_words",
+                                     blank=True)  # related words
+
     word_type = models.CharField(
         max_length=3,
         blank=True,
@@ -35,8 +37,14 @@ class Word(models.Model):
 
     source = models.URLField(blank=True)
 
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET(1),
+        blank=True,
+    )
+
     def __str__(self):
-        return f"{self.word}, id: {self.id}, type: {self.word_type}, {self.word_descriptions}"
+        return f"{self.word}"
 
     class Meta:
         ordering = ['word']
@@ -63,6 +71,13 @@ class Description(models.Model):
                               on_delete=models.SET_DEFAULT)
     description = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
+
+    user = models.ForeignKey(
+        User,
+        related_name='user',
+        on_delete=models.SET(1),
+        editable=False,
+    )
 
     class Meta:
         order_with_respect_to = 'word'
